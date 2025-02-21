@@ -3,47 +3,52 @@
 from django.shortcuts import render
 import requests
 import datetime
+import os
+
+CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
+FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
+
 
 def index(request):
-  api_key = "0c2ea956201a29df5becfa621e8174d4"
-  current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
-  forecast_url = 'https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=current,minutely,hourly,alerts&appid={}'
+    api_key = os.environ.get("API_KEY", "")
 
-  if request.method == 'POST':
-    city1 = request.POST['city1']
+    if request.method != "POST":
+        return render(request, "index.html")
 
-    weather_data1, daily_forecasts1 = fetch_weather_and_forecast(city1, api_key, current_weather_url, forecast_url)
-    
+    city = request.POST["city"]
+    weather_data1, daily_forecasts1 = fetch_weather_and_forecast(city, api_key)
     context = {
-      'weather_data1': weather_data1,
-      'daily_forecasts1': daily_forecasts1,
+        "weather_data1": weather_data1,
+        "daily_forecasts1": daily_forecasts1,
     }
 
-    return render(request, 'index.html', context)
-  else:
-    return render(request, 'index.html')
+    return render(request, "index.html", context)
 
 
-def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url):
-  response = requests.get(current_weather_url.format(city, api_key)).json()
-  lat, lon = response['coord']['lat'], response['coord']['lon']
-  forecast_response = requests.get(forecast_url.format(lat, lon, api_key)).json()
+def fetch_weather_and_forecast(city, api_key):
+    weather_response = requests.get(CURRENT_WEATHER_URL.format(city, api_key)).json()
+    forecast_response = requests.get(FORECAST_WEATHER_URL.format(city, api_key)).json()
+    # weather_response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}").json()
+    # forecast_response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}").json()
 
-  weather_data = {
-    'city': city,
-    'temperature': round(response['main']['temp'] - 273.15, 2),
-    'description': response['weather'][0]['description'],
-    'icon': response['weather'][0]['icon'],
-  }
+    # TODO: Create a Serializer to handle JSON to 
+    weather_data = {
+        "city": city,
+        "temperature": round(weather_response["main"]["temp"] - 273.15, 2),
+        "description": weather_response["weather"][0]["description"],
+        "icon": weather_response["weather"][0]["icon"],
+    }
 
-  daily_forecasts = []
-  for daily_data in forecast_response['daily'][:5]:
-    daily_forecasts.append({
-      'day': datetime.datetime.fromtimestamp(daily_data['dt']).strftime('%A'),
-      'min_temp': round(daily_data['temp']['min'] - 273.15, 2),
-      'max_temp': round(daily_data['temp']['max'] - 273.15, 2),
-      'description': daily_data['weather'][0]['description'],
-      'icon': daily_data['weather'][0]['icon'],
-    })
+    daily_forecasts = []
+    for daily_data in forecast_response["list"][:5]:
+        daily_forecasts.append(
+            {
+                "day": datetime.datetime.fromtimestamp(daily_data["dt"]).strftime("%A"),
+                "max_temp": round(daily_data["main"]["temp_max"] - 273.15, 2),
+                "min_temp": round(daily_data["main"]["temp_min"] - 273.15, 2),
+                "description": daily_data["weather"][0]["description"],
+                "icon": daily_data["weather"][0]["icon"],
+            }
+        )
 
-  return weather_data, daily_forecasts
+    return weather_data, daily_forecasts
