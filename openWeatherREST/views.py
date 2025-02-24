@@ -1,14 +1,11 @@
 # Create your views here.
 
-from django.shortcuts import render
 from openWeatherREST.serializers import WeatherResponseSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
-import datetime
 import os
 
-# CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 
 
@@ -23,12 +20,5 @@ def open_weather_REST(request):
 
 
 def fetch_weather_and_forecast(city, api_key):
-    # weather_response = requests.get(CURRENT_WEATHER_URL.format(city, api_key)).json()
     forecast_response = requests.get(FORECAST_WEATHER_URL.format(city, api_key))
-    # weather_response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}").json()
-    # forecast_response = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}").json()
-
-    # TODO: Create a Serializer to handle JSON to
     return WeatherResponseSerializer(data=forecast_response.json())
-
-    # return weather_data, daily_forecasts
