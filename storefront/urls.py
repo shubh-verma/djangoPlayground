@@ -24,5 +24,5 @@ urlpatterns = [
     path("playground/", include("playground.urls")),
     path("users/", include("crudAPP.urls")),
     path("openWeather/", include("openWeather.urls")),  # Debug toolbar URLS
-    path("openWeatherREST/", include("openWeatherREST.urls")),  # Debug toolbar URLS
+    path("weather/", include("weather.urls")),  # Debug toolbar URLS
 ] + debug_toolbar_urls()
