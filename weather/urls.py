@@ -5,7 +5,7 @@ from . import views
 from .views import WeatherAPIView
 
 urlpatterns = [
-    path("", views.weather, name="current_weather"),
+    path("current", views.weather, name="current_weather"),
     path("forecast/", WeatherAPIView.as_view(), name="forecast_weather"),
 ]
 

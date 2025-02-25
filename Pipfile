@@ -10,6 +10,7 @@ djangorestframework = "*"
 psycopg2-binary = "*"
 requests = "*"
 black = "*"
+django-redis = "*"
 
 [dev-packages]
 
