@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     "playground",
     "debug_toolbar",
     "rest_framework",
-    "crudAPP",
-    "openWeather",
+    "crud_app",
     "weather",
 ]
 
@@ -68,7 +67,7 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/1",  # Change this to your Valkey Redis URL
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 

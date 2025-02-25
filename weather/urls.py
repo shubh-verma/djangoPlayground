@@ -1,12 +1,12 @@
 from django.urls import path
-from . import views
+from weather import views
 
 # from rest_framework.routers import DefaultRouter
-from .views import WeatherAPIView
+from weather.views import ForecastAPIView
 
 urlpatterns = [
-    path("current", views.weather, name="current_weather"),
-    path("forecast/", WeatherAPIView.as_view(), name="forecast_weather"),
+    path(r"current", views.weather, name="current_weather"),
+    path(r"forecast/", ForecastAPIView.as_view(), name="forecast_weather"),
 ]
 
 # router = DefaultRouter()

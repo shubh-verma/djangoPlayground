@@ -9,10 +9,10 @@ django-debug-toolbar = "*"
 djangorestframework = "*"
 psycopg2-binary = "*"
 requests = "*"
-black = "*"
-django-redis = "*"
+
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.12"
