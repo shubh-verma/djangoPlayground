@@ -9,7 +9,7 @@ django-debug-toolbar = "*"
 djangorestframework = "*"
 psycopg2-binary = "*"
 requests = "*"
-
+drf-api-logger = "*"
 
 [dev-packages]
 black = "*"

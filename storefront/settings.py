@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "crud_app",
     "weather",
+    # "drf_api_logger",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
 ]
 
 INTERNAL_IPS = [
@@ -104,6 +106,8 @@ DATABASES = {
     }
 }
 
+# DRF_API_LOGGER_DATABASE = True  # Default to False
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -113,6 +117,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",  # Require authentication by default
     ),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {"anon": "2/day", "user": "50/day"},
 }
 
 

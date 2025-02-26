@@ -5,14 +5,15 @@ from weather.serializers import WeatherSerializer, ForecastResponseSerializer
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, throttle_classes, permission_classes, authentication_classes
 import requests
 from django.views.decorators.cache import cache_page
 from django.conf import settings
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.decorators import permission_classes, authentication_classes
+
+from rest_framework.throttling import UserRateThrottle
 
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
@@ -23,6 +24,7 @@ CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appi
 @authentication_classes([SessionAuthentication])
 # @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
+@throttle_classes([UserRateThrottle])
 def weather(request):
 
     city = request.query_params.get("q")
@@ -52,6 +54,7 @@ class ForecastAPIView(APIView):
 
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
     @method_decorator(cache_page(60 * 1 * 1), name="dispatch")
     def get(self, request):
