@@ -2,16 +2,13 @@
 
 from rest_framework import status
 from weather.serializers import WeatherSerializer, ForecastResponseSerializer
-from rest_framework.decorators import action
+from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
-import os
-
-from django.core.cache import cache
 from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
+from storefront.settings import api_key
 
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
@@ -20,7 +17,6 @@ CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appi
 @cache_page(60 * 1)
 @api_view(["GET", "POST"])
 def weather(request):
-    api_key = os.environ.get("API_KEY", "")
 
     city = request.query_params.get("q")
 
@@ -45,26 +41,18 @@ def fetch_weather(city, api_key):
     return WeatherSerializer(data=weather_response.json())
 
 
-@method_decorator(cache_page(60 * 1))
 class ForecastAPIView(APIView):
+    @method_decorator(cache_page(60 * 1 * 1), name="dispatch")
     def get(self, request, format=None):
-        api_key = os.environ.get("API_KEY", "")
         city = request.query_params.get("q")
 
         if not city:
             return Response(
                 {"error": "City is required"}, status=status.HTTP_400_BAD_REQUEST
             )
-        cache_key = f"weather_{city}"
-        cached_data = cache.get(cache_key)
-
-        if cached_data:
-            return Response(cached_data.data, status=status.HTTP_200_OK)
-
         daily_forecasts = self.fetch_forecast(city, api_key)
 
         if daily_forecasts and daily_forecasts.is_valid():
-            cache.set(cache_key, daily_forecasts, timeout=60 * 1)
             return Response(daily_forecasts.data, status=status.HTTP_200_OK)
 
         return Response(

@@ -3,8 +3,8 @@ from django.urls import path, include
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("playground/", include("playground.urls")),
-    path("users/", include("crudAPP.urls")),  # Debug toolbar URLS
-    path("weather/", include("weather.urls")),  # Debug toolbar URLS
+    path(r"admin/", admin.site.urls),
+    path(r"playground/", include("playground.urls")),
+    path(r"users/", include("crud_app.urls")),  # Debug toolbar URLS
+    path(r"weather/", include("weather.urls")),  # Debug toolbar URLS
 ] + debug_toolbar_urls()
