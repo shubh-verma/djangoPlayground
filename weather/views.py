@@ -20,11 +20,13 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework.throttling import UserRateThrottle
 
-from drf_api_logger import API_LOGGER_SIGNAL
+import logging
 
 
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
+
+logger = logging.getLogger(__name__)
 
 
 @cache_page(60 * 1)
@@ -38,6 +40,7 @@ def weather(request):
     city = request.query_params.get("q")
 
     if not city:
+        logger.warning("City parameter is missing")
         return Response(
             {"error": "City is required"}, status=status.HTTP_400_BAD_REQUEST
         )
@@ -45,8 +48,10 @@ def weather(request):
     current_weather = fetch_weather(city)
 
     if current_weather and current_weather.is_valid():
+        logger.info(f"Fetching weather for {city}")
         return Response(current_weather.data, status=status.HTTP_200_OK)
 
+    logger.error("Invalid response from weather API")
     return Response(
         {"error": "Invalid response from weather API"},
         status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -69,14 +74,17 @@ class ForecastAPIView(APIView):
         city = request.query_params.get("q")
 
         if not city:
+            logger.warning("City parameter is missing")
             return Response(
                 {"error": "City is required"}, status=status.HTTP_400_BAD_REQUEST
             )
         daily_forecasts = self.fetch_forecast(city)
 
         if daily_forecasts and daily_forecasts.is_valid():
+            logger.info(f"Fetching weather for {city}")
             return Response(daily_forecasts.data, status=status.HTTP_200_OK)
 
+        logger.error("Invalid response from weather API")
         return Response(
             {"error": "Invalid response from weather API"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -85,10 +93,3 @@ class ForecastAPIView(APIView):
     def fetch_forecast(self, city):
         response = requests.get(FORECAST_WEATHER_URL.format(city, settings.API_KEY))
         return ForecastResponseSerializer(data=response.json())
-
-
-def listener_one(**kwargs):
-    print("abcd", kwargs)
-
-
-API_LOGGER_SIGNAL.listen += listener_one

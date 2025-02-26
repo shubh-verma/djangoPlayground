@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "crud_app",
     "weather",
-    "drf_api_logger",
 ]
 
 MIDDLEWARE = [
@@ -56,7 +55,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
 ]
 
 INTERNAL_IPS = [
@@ -122,6 +120,35 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"anon": "2/day", "user": "100/day"},
 }
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",  # Set to DEBUG to log all messages
+            "class": "logging.StreamHandler",  # Logs to console
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "DEBUG",  # Adjust level as needed
+            "propagate": True,
+        },
+        "weather": {  # Custom logger for your app
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -171,7 +198,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # LOGIN_URL = "/auth/login"
 
 # STATIC_ROOT = "staticfiles"
-
-DRF_API_LOGGER_DATABASE = True  # Default to False
-
-DRF_API_LOGGER_SIGNAL = True  # Default to False

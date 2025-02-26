@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "960fd3ab8ac3d7b0d2b945faaad7a70ac4c4644aca0540143f6c0c432f35a85e"
+            "sha256": "48aea7e50a9eb44474968f14dd3bd40f3bbcb8be2d98b8cf25a2f0cda129f2f2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,14 +23,6 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==3.8.1"
-        },
-        "bleach": {
-            "hashes": [
-                "sha256:117d9c6097a7c3d22fd578fcd8d35ff1e125df6736f554da4e432fdd63f31e5e",
-                "sha256:123e894118b8a599fd80d3ec1a6d4cc7ce4e5882b1317a7e1ba69b56e95f991f"
-            ],
-            "markers": "python_version >= '3.9'",
-            "version": "==6.2.0"
         },
         "certifi": {
             "hashes": [
@@ -165,15 +157,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==3.15.2"
         },
-        "drf-api-logger": {
-            "hashes": [
-                "sha256:8dd88c167969ba020c3655073651aeb5bab14d56ba71861bab3a87dfe4317e51",
-                "sha256:eada8d1b3226519636a53f4878846d4258b28c177da314306075e0ca575668e0"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.6'",
-            "version": "==1.1.16"
-        },
         "idna": {
             "hashes": [
                 "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9",
@@ -281,13 +264,6 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2.3.0"
-        },
-        "webencodings": {
-            "hashes": [
-                "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78",
-                "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"
-            ],
-            "version": "==0.5.1"
         }
     },
     "develop": {
