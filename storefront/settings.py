@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "crud_app",
     "weather",
-    # "drf_api_logger",
+    "drf_api_logger",
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    # "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
+    "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
 ]
 
 INTERNAL_IPS = [
@@ -103,10 +103,8 @@ DATABASES = {
         "PASSWORD": os.environ.get("PG_PASSWORD", "postgres"),
         "HOST": os.environ.get("PG_HOST", "localhost"),
         "PORT": os.environ.get("PG_PORT", "5432"),
-    }
+    },
 }
-
-# DRF_API_LOGGER_DATABASE = True  # Default to False
 
 
 REST_FRAMEWORK = {
@@ -121,7 +119,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "2/day", "user": "50/day"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "2/day", "user": "100/day"},
 }
 
 
@@ -173,3 +171,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # LOGIN_URL = "/auth/login"
 
 # STATIC_ROOT = "staticfiles"
+
+DRF_API_LOGGER_DATABASE = True  # Default to False
+
+DRF_API_LOGGER_SIGNAL = True  # Default to False

@@ -5,7 +5,12 @@ from weather.serializers import WeatherSerializer, ForecastResponseSerializer
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, throttle_classes, permission_classes, authentication_classes
+from rest_framework.decorators import (
+    api_view,
+    throttle_classes,
+    permission_classes,
+    authentication_classes,
+)
 import requests
 from django.views.decorators.cache import cache_page
 from django.conf import settings
@@ -14,6 +19,9 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework.throttling import UserRateThrottle
+
+from drf_api_logger import API_LOGGER_SIGNAL
+
 
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
@@ -77,3 +85,10 @@ class ForecastAPIView(APIView):
     def fetch_forecast(self, city):
         response = requests.get(FORECAST_WEATHER_URL.format(city, settings.API_KEY))
         return ForecastResponseSerializer(data=response.json())
+
+
+def listener_one(**kwargs):
+    print("abcd", kwargs)
+
+
+API_LOGGER_SIGNAL.listen += listener_one
