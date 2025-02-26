@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
 from django.views.decorators.cache import cache_page
-from storefront.settings import api_key
+from django.conf import settings
 
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
@@ -25,7 +25,7 @@ def weather(request):
             {"error": "City is required"}, status=status.HTTP_400_BAD_REQUEST
         )
 
-    current_weather = fetch_weather(city, api_key)
+    current_weather = fetch_weather(city)
 
     if current_weather and current_weather.is_valid():
         return Response(current_weather.data, status=status.HTTP_200_OK)
@@ -36,21 +36,21 @@ def weather(request):
     )
 
 
-def fetch_weather(city, api_key):
-    weather_response = requests.get(CURRENT_WEATHER_URL.format(city, api_key))
+def fetch_weather(city):
+    weather_response = requests.get(CURRENT_WEATHER_URL.format(city, settings.API_KEY))
     return WeatherSerializer(data=weather_response.json())
 
 
 class ForecastAPIView(APIView):
     @method_decorator(cache_page(60 * 1 * 1), name="dispatch")
-    def get(self, request, format=None):
+    def get(self, request):
         city = request.query_params.get("q")
 
         if not city:
             return Response(
                 {"error": "City is required"}, status=status.HTTP_400_BAD_REQUEST
             )
-        daily_forecasts = self.fetch_forecast(city, api_key)
+        daily_forecasts = self.fetch_forecast(city)
 
         if daily_forecasts and daily_forecasts.is_valid():
             return Response(daily_forecasts.data, status=status.HTTP_200_OK)
@@ -60,6 +60,6 @@ class ForecastAPIView(APIView):
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
-    def fetch_forecast(self, city, api_key):
-        response = requests.get(FORECAST_WEATHER_URL.format(city, api_key))
+    def fetch_forecast(self, city):
+        response = requests.get(FORECAST_WEATHER_URL.format(city, settings.API_KEY))
         return ForecastResponseSerializer(data=response.json())

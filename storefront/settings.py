@@ -62,17 +62,17 @@ INTERNAL_IPS = [
 ]
 
 CACHES = {
-    # "default": {
-    #     "BACKEND": "django_redis.cache.RedisCache",
-    #     "LOCATION": "redis://127.0.0.1:6379/1",  # Change this to your Valkey Redis URL
-    #     "OPTIONS": {
-    #         "CLIENT_CLASS": "django_redis.client.DefaultClient",
-    #     },
-    # },
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",  # Change this to your Valkey Redis URL
+        # "OPTIONS": {
+        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        # },
+    },
+    # 'default': {
+    #     'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    #     'LOCATION': 'unique-snowflake',
+    # }
 }
 
 
@@ -142,7 +142,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-api_key = os.environ.get("API_KEY", "")
+API_KEY = os.environ.get("API_KEY", "")
 
 
 # Static files (CSS, JavaScript, Images)
