@@ -2,7 +2,6 @@ from django.urls import path
 from weather import views
 
 # from rest_framework.routers import DefaultRouter
-# from weather.views import ForecastAPIView
 
 urlpatterns = [
     path(r"current", views.weather, name="current_weather"),

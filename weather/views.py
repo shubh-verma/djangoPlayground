@@ -10,12 +10,19 @@ import requests
 from django.views.decorators.cache import cache_page
 from django.conf import settings
 
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes, authentication_classes
+
 FORECAST_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?q={}&appid={}"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
 
 
 @cache_page(60 * 1)
 @api_view(["GET", "POST"])
+@authentication_classes([SessionAuthentication])
+# @permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def weather(request):
 
     city = request.query_params.get("q")
@@ -42,6 +49,10 @@ def fetch_weather(city):
 
 
 class ForecastAPIView(APIView):
+
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @method_decorator(cache_page(60 * 1 * 1), name="dispatch")
     def get(self, request):
         city = request.query_params.get("q")

@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-9wswa#hz=h110ruzc6f_gga#8+3=)4i(8m+eoidjvx(y#&@zc#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sessions",
+    "rest_framework",
     "playground",
     "debug_toolbar",
-    "rest_framework",
     "crud_app",
     "weather",
 ]
@@ -50,29 +51,21 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 INTERNAL_IPS = [
-    # ...
     "127.0.0.1",
-    # ...
 ]
 
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",  # Change this to your Valkey Redis URL
-        # "OPTIONS": {
-        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        # },
     },
-    # 'default': {
-    #     'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    #     'LOCATION': 'unique-snowflake',
-    # }
 }
 
 
@@ -101,14 +94,25 @@ WSGI_APPLICATION = "storefront.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': os.environ.get('DB_DRIVER', 'django.db.backends.postgresql'),
-    #     'NAME': os.environ.get('PG_DB', 'postgres'),
-    #     'USER' : os.environ.get('PG_USER', 'postgres'),
-    #     'PASSWORD' : os.environ.get('PG_PASSWORD', 'postgres'),
-    #     'HOST' : os.environ.get('PG_HOST', 'localhost'),
-    #     'PORT' : os.environ.get('PG_PORT', '5432'),do
-    # }
+    "default": {
+        "ENGINE": os.environ.get("DB_DRIVER", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("PG_DB", "postgres"),
+        "USER": os.environ.get("PG_USER", "postgres"),
+        "PASSWORD": os.environ.get("PG_PASSWORD", "postgres"),
+        "HOST": os.environ.get("PG_HOST", "localhost"),
+        "PORT": os.environ.get("PG_PORT", "5432"),
+    }
+}
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",  # Uses Django sessions
+        "rest_framework.authentication.BasicAuthentication",  # Uses basic auth (username & password)
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",  # Require authentication by default
+    ),
 }
 
 
@@ -154,3 +158,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# LOGIN_REDIRECT_URL = "/"
+
+# LOGIN_URL = "/auth/login"
+
+# STATIC_ROOT = "staticfiles"
