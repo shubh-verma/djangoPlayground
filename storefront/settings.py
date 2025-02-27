@@ -125,8 +125,9 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "simple": {
-            "format": "{levelname} {asctime} {module} {message}",
-            "style": "{",
+            "format": "%(asctime)s: %(name)s: %(levelname)s: %(lineno)s: %(message)s",
+            # "format": "{levelname} {asctime} {module} {message}",
+            # "style": "{",
         },
     },
     "handlers": {
@@ -139,7 +140,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "DEBUG",  # Adjust level as needed
+            "level": "INFO",  # Adjust level as needed
             "propagate": True,
         },
         "weather": {  # Custom logger for your app
