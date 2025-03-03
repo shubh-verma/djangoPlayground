@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "crud_app",
     "weather",
+    "opensearch_dvdrental"
 ]
 
 MIDDLEWARE = [

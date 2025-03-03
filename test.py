@@ -809,12 +809,13 @@ response = {
                         'id': 802,
                         'main': 'Clouds'}],
            'wind': {'deg': 274, 'gust': 6.53, 'speed': 5.15}}],
- 'message': 0}
-}
+        'message': 0
+ }
 
 
-weather = 
-{'base': 'stations',
+
+weather = {
+  'base': 'stations',
  'clouds': {'all': 0},
  'cod': 200,
  'coord': {'lat': 19.0144, 'lon': 72.8479},
